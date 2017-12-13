@@ -5,7 +5,12 @@ from rest_framework.schemas import get_schema_view
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
-router.register(r'snippets', views.SnippetViewSet)
+router.register(r'veiculos/especiais', views.EspecialViewSet)
+router.register(r'veiculos', views.VeiculoViewSet)
+router.register(r'clientes', views.ClienteViewSet)
+router.register(r'precos', views.TabelaPrecosViewSet)
+router.register(r'alugueis', views.AluguelViewSet)
+router.register(r'sinistros', views.SinistroViewSet)
 router.register(r'users', views.UserViewSet)
 
 # The API URLs are now determined automatically by the router.

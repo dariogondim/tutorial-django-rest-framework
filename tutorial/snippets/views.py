@@ -1,46 +1,130 @@
+from django.shortcuts import render
+
+# Create your views here.
+from snippets.models import *
+from snippets.serializers import *
+from rest_framework import generics
 from django.contrib.auth.models import User
-from rest_framework import permissions
-from rest_framework import renderers
-from rest_framework import viewsets
-from rest_framework.decorators import detail_route
-from rest_framework.response import Response
-from snippets.models import Snippet
+from snippets.serializers import UserSerializer
+from rest_framework import permissions 
 from snippets.permissions import IsOwnerOrReadOnly
-from snippets.serializers import SnippetSerializer, UserSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework import renderers
 
 
-class SnippetViewSet(viewsets.ModelViewSet):
+from rest_framework import viewsets
+
+class VeiculoViewSet(viewsets.ModelViewSet):
     """
-    This endpoint presents code snippets.
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
 
-    The `highlight` field presents a hyperlink to the highlighted HTML
-    representation of the code snippet.
-
-    The **owner** of the code snippet may update or delete instances
-    of the code snippet.
-
-    Try it yourself by logging in as one of these four users: **amy**, **max**,
-    **jose** or **aziz**.  The passwords are the same as the usernames.
+    Additionally we also provide an extra `highlight` action.
     """
-    queryset = Snippet.objects.all()
-    serializer_class = SnippetSerializer
+    queryset = Veiculo.objects.all()
+    serializer_class = VeiculoSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
                           IsOwnerOrReadOnly,)
 
-    @detail_route(renderer_classes=(renderers.StaticHTMLRenderer,))
-    def highlight(self, request, *args, **kwargs):
-        snippet = self.get_object()
-        return Response(snippet.highlighted)
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-    
+        serializer.save(user_cadastro=self.request.user)
+
+class EspecialViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Especial.objects.all()
+    serializer_class = EspecialSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(user_cadastro=self.request.user)
+
+class ClienteViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Cliente.objects.all()
+    serializer_class = ClienteSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(user_cadastro=self.request.user)
+
+
+class TabelaPrecosViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = TabelaPrecos.objects.all()
+    serializer_class = TabelaPrecosSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(user_cadastro=self.request.user)
+
+class SinistroViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Sinistro.objects.all()
+    serializer_class = SinistroSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(user_cadastro=self.request.user)        
+
+
+class AluguelViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = Aluguel.objects.all()
+    serializer_class = AluguelSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,
+                          IsOwnerOrReadOnly,)
+
+
+    def perform_create(self, serializer):
+        serializer.save(user_cadastro=self.request.user)
+
+
+
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    This endpoint presents the users in the system.
-
-    As you can see, the collection of snippet instances owned by a user are
-    serialized using a hyperlinked representation.
+    This viewset automatically provides `list` and `detail` actions.
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'veiculos': reverse('veiculos-list', request=request, format=format),
+    })
